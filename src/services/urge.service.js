@@ -1,27 +1,50 @@
 const pool = require('../utils/pg');
 const { OpenAIApi } = require('openai'); 
-import { HfInference } from '@huggingface/inference';
-const { pipeline } = require("@huggingface/transformers");
+const { HfInference } = require('@huggingface/inference');
+const { pipeline } = require('@huggingface/agents')
+//const readline = require('readline');
+const fetch = require('node-fetch');
+
 
 const openaiApiKey = process.env.OPENAI_API_KEY 
-const HF_ACCESS_TOKEN = process.env.HF_API_TOKEN
+const accessToken = process.env.HF_API_TOKEN
 
 //INITIALISE INFERENCE
-const inference = new HfInference(HF_ACCESS_TOKEN);
+//const inference = new HfInference(accessToken);
 
 //model stuff 
-const model = "sileod/mdeberta-v3-base-tasksource-nli";
-const nlp = pipeline("zero-shot-classification", { model });
+//const model = "sileod/mdeberta-v3-base-tasksource-nli";
+//const nlp = pipeline("zero-shot-classification", { model });
 
 //user input 
-const rl = readline.createInterface({
+/*const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-  });
+  }); */
 
-function getUserInput() {
-    rl.question("Enter a text prompt: ", async (prompt) => {
-        const result = await nlp(prompt, {
+async function queryHuggingFaceAPI(data) {
+    const response = await fetch(
+      'https://api-inference.huggingface.co/models/sileod/deberta-v3-base-tasksource-nli',
+      {
+        headers: { Authorization: `Bearer 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`},
+        method: 'POST',
+        body: JSON.stringify(data),
+      }
+    );
+    const result = await response.json();
+    return result;
+  }
+  queryHuggingFaceAPI({"inputs": "ice cream", 
+    "parameters": {
+        "candidate_labels": ["savings", "needs", "wants"]
+        }}).then((response) => {
+        console.log(JSON.stringify(response));
+    });
+
+
+/*function getUserInput() {
+    rl.question("Enter the item (desc atleast 3 words): ", async (prompt) => {
+        const result = await inference.classifier(model, [prompt] , {
           candidate_labels: [ 
             "wants", 
             "needs", 
@@ -34,20 +57,8 @@ function getUserInput() {
       });
     } 
     getUserInput();
-const itemName = "";
-
-
-/* from transformers import pipeline
-
-pipe = pipeline(model="facebook/bart-large-mnli")
-pipe("I have a problem with my iphone that needs to be resolved asap!",
-    candidate_labels=["urgent", "not urgent", "phone", "tablet", "computer"],
-)const labels =[ 
-    "wants", 
-    "needs", 
-    "savings" ] 
-
 */
+
 const getAllUrgesService = async (user) => {
     try {
         console.log('Getting all urges');
@@ -65,41 +76,48 @@ const getAllUrgesService = async (user) => {
                                             JOIN 
                                                 classification ON category.classification_id = classification.id
                                         `);
-
-                                    //    SELECT
-                                    //    category.id,
-                                    //    category.name as category,
-                                    //    classification.name as classification
-        // if (result?.rows?.length > 0) {
-        //     return result?.rows;
-        // } else {
-        //     throw new Error('Something went wrong');
-        // }
         return result?.rows;
     } catch (err) {
         throw new Error(err.message);
     }
 }
 
-const getCategoryByAi = async (user) => {
-try {
-    const openai = new OpenAIApi({ apiKey: openaiApiKey });
-    const response = await openai.createCompletion({
-      model: 'sileod/mdeberta-v3-base-tasksource-nli', // Replace with the desired OpenAI model
-      prompt: 'Your prompt here', // Replace with your prompt
-
-
-       // Process the OpenAI response as needed
-    //   const processedData = response.data.choices[0].text;
-       res.json(processedData),
-     })
-     } catch (error) {
-       console.error('Error fetching data from the database:', error);
-       res.status(500).json({ error: 'Internal Server Error' })
-       
-     };
-}
-
 module.exports = {
-    getAllUrgesService
+    getAllUrgesService,
+    queryHuggingFaceAPI
 }
+
+/*how to 
+
+
+
+/*Use this model with the Inference API
+
+async function query(data) {
+	const response = await fetch(
+		"https://api-inference.huggingface.co/models/sileod/deberta-v3-base-tasksource-nli",
+		{
+			headers: { Authorization: "Bearer xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" },
+			method: "POST",
+			body: JSON.stringify(data),
+		}
+	);
+	const result = await response.json();
+	return result;
+}
+
+query({"inputs": "Hi, I recently bought a device from your company but it is not working as advertised and I would like to get reimbursed!", "parameters": {"candidate_labels": ["refund", "legal", "faq"]}}).then((response) => {
+	console.log(JSON.stringify(response));
+}); */
+
+/* from transformers import pipeline
+
+pipe = pipeline(model="facebook/bart-large-mnli")
+pipe("I have a problem with my iphone that needs to be resolved asap!",
+    candidate_labels=["urgent", "not urgent", "phone", "tablet", "computer"],
+)const labels =[ 
+    "wants", 
+    "needs", 
+    "savings" ] 
+//trasnforemers for python and agents for js
+*/

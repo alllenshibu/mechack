@@ -37,7 +37,6 @@ const getStatsService = async (user) => {
     }
 }
 
-
 module.exports = {
     getStatsService
 }

@@ -8,7 +8,7 @@ const { getAllGoalsContoller, getGoalByIdController, addNewGoalController } = re
 const { getAllIncomesController, getIncomeByIdController, addNewIncomeController } = require('./controllers/income.controller');
 const { getAllCategoriesController } = require('./controllers/category.controller');
 const { getStatsController } = require('./controllers/stats.controller');
-const { getAllUrgesController } = require('./controllers/urge.controller')
+const { getUrgeCategoryController } = require('./controllers/urge.controller')
 
 const router = express.Router();
 
@@ -78,9 +78,8 @@ router.post("/bro", authorize, (req, res) => {
 
 //sql routes
 router.get("/urge", authorize, (req, res) => {
-    getAllUrgesController(req, res);
-    
-    });
+    getUrgeCategoryController(req, res);
+});
 ;
 
 module.exports = router;
