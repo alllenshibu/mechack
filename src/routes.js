@@ -9,7 +9,8 @@ const { getAllIncomesController, getIncomeByIdController, addNewIncomeController
 const { getAllCategoriesController } = require('./controllers/category.controller');
 const { getStatsController } = require('./controllers/stats.controller');
 const { getUserDetailsByIdController } = require('./controllers/user.controller');
-const { getUrgeCategoryController } = require('./controllers/urge.controller')
+const { getUrgeCategoryController } = require('./controllers/urge.controller');
+const { bigBrainIdeaService } = require('./services/stats.service');
 
 const router = express.Router();
 
@@ -87,6 +88,11 @@ router.post("/bro", authorize, (req, res) => {
 router.get("/urge", authorize, (req, res) => {
     getUrgeCategoryController(req, res);
 });
-;
+
+// Big brain routes
+router.post("/bigbrain", authorize, async (req, res) => {
+    await bigBrainIdeaService(req?.user)
+    res.send("Big brain");
+});
 
 module.exports = router;

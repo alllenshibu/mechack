@@ -1,5 +1,7 @@
 const { response } = require('express');
 const pool = require('../utils/pg');
+const { getAllGoalsService } = require('./goal.service');
+const { addNewExpenseService } = require('./expense.service');
 
 const getStatsService = async (user) => {
     try {
@@ -104,7 +106,10 @@ const getStatsService = async (user) => {
 
         responseData = { ...responseData, totalSavingsExpense: result?.rows[0]?.sum }
 
+
         responseData = { ...responseData, totalBalance: responseData?.totalIncome - responseData?.totalExpense }
+
+        // TODO: algo  ivide
 
         return responseData;
     } catch (err) {
@@ -112,6 +117,72 @@ const getStatsService = async (user) => {
     }
 }
 
+const bigBrainIdeaService = async (user) => {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+
+    const userId = await pool.query('SELECT id FROM "user" WHERE email = $1', [user]);
+
+    if (userId?.rows?.length === 0) {
+        throw new Error('User not found');
+    }
+
+    result = await pool.query(`
+                                SELECT * 
+                                FROM monthly_stats 
+                                WHERE user_id = $1 
+                                AND month = $2 
+                                AND year = $3
+                            `, [userId?.rows[0]?.id, currentMonth, currentYear]);
+
+    if (result?.rows?.length === 0) {
+        const stats = await getStatsService(user);
+        const { totalBalance } = stats;
+
+        let goals = await getAllGoalsService(user);
+
+        let totalRemainingGoalAmount = 0;
+        let numberOfGoals = 0;
+        for (let goal of goals) {
+            if (goal?.completed_amount >= goal?.total_amount) {
+                goals = goals.filter(g => g?.id !== goal?.id);
+            }
+            const remaining = goal?.total_amount - goal?.completed_amount;
+            totalRemainingGoalAmount += remaining;
+            numberOfGoals++;
+            goal = { ...goal, remaining }
+            goals = [...goals, goal]
+        }
+
+        const amountAssignedToGoals = parseFloat(totalBalance) - parseFloat(totalRemainingGoalAmount);
+        const amountAssignedPerGoal = amountAssignedToGoals / numberOfGoals;
+
+
+        console.log({ goals })
+
+        for (let goal of goals) {
+            let completed_amount = parseFloat(goal?.completed_amount)
+            completed_amount += parseFloat(amountAssignedPerGoal);
+
+            console.log({ completed_amount, amountAssignedPerGoal })
+
+            goal = { ...goal, completed_amount }
+            let result = await pool.query(`UPDATE goal SET completed_amount = $1 WHERE id = $2`, [goal?.completed_amount, goal?.id]);
+            if (result?.rowCount === 0) {
+                throw new Error('Failed to update goal');
+            }
+            result = await addNewExpenseService(user, "Loan", `Saving towards ${goal.title}`, amountAssignedPerGoal, new Date().toISOString(), 0);
+            if (result?.rowCount === 0) {
+                throw new Error('Failed to add expense for saving');
+            }
+        }
+
+        result = await pool.query(`INSERT INTO monthly_stats (user_id, month, year, towards_goal) VALUES ($1, $2, $3, $4)`, [userId?.rows[0]?.id, currentMonth, currentYear, amountAssignedToGoals]);
+    }
+}
+
 module.exports = {
-    getStatsService
+    getStatsService,
+    bigBrainIdeaService
 }

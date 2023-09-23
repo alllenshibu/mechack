@@ -197,7 +197,7 @@ const addNewExpenseService = async (user, category, title, amount, timestamp, fr
             categoryId = await pool.query(`SELECT id FROM category WHERE name = 'Other'`)
         }
 
-        const result = await pool.query('INSERT INTO expense (title, amount, timestamp, user_id, category_id, freq_per_year) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id', [title, amount, timestamp, userId?.rows[0]?.id, categoryId?.rows[0]?.id], freq_per_year);
+        const result = await pool.query('INSERT INTO expense (title, amount, timestamp, user_id, category_id, freq_per_year) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id', [title, amount, timestamp, userId?.rows[0]?.id, categoryId?.rows[0]?.id, freq_per_year]);
         if (result?.rows?.length > 0) {
             return result?.rows[0]?.id;
         } else {
