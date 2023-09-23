@@ -73,6 +73,11 @@ router.get("/stats", authorize, (req, res) => {
 // Bro routes
 router.post("/bro", authorize, (req, res) => {
     chatWithBroController(req, res);
-});
+})
+//sql routes
+router.get("/urge", authorize, (req, res) => {
+        getAllCategoriesController(req, res);
+    });
+;
 
 module.exports = router;

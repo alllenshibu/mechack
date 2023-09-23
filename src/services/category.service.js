@@ -1,6 +1,6 @@
 const pool = require('../utils/pg');
 
-const getAllExpensesService = async (user) => {
+const getAllCategoriesService = async (user) => {
     try {
         console.log('Getting all categories');
         const userId = await pool.query('SELECT id FROM "user" WHERE email = $1', [user]);
@@ -32,5 +32,5 @@ const getAllExpensesService = async (user) => {
 }
 
 module.exports = {
-    getAllExpensesService
+    getAllCategoriesService
 }
