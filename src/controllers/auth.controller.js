@@ -1,16 +1,12 @@
 const { signupService, loginService } = require('../services/auth.service');
 
 const signupController = async (req, res) => {
-    const first_name = req?.body?.firstName;
-    const last_name = req?.body?.lastName;
+    const name = req?.body?.name;
     const email = req?.body?.email;
     const password = req?.body?.password;
 
-    if (!first_name || first_name === '' || first_name === undefined) {
-        return res.status(400).send('First name is required');
-    }
-    if (!last_name || last_name === '' || last_name === undefined) {
-        return res.status(400).send('Last name is required');
+    if (!name || name === '' || name === undefined) {
+        return res.status(400).send('Name is required');
     }
     if (!email || email === '' || email === undefined) {
         return res.status(400).send('Email is required');
@@ -20,7 +16,7 @@ const signupController = async (req, res) => {
     }
 
     try {
-        token = await signupService(first_name, last_name, email, password);
+        token = await signupService(name, email, password);
         if (token) {
             const message = {
                 token: token
