@@ -70,6 +70,7 @@ router.get("/category", authorize, (req, res) => {
 // Stats routes
 router.get("/stats", authorize, (req, res) => {
     getStatsController(req, res);
+    
 })
 
 // User routes

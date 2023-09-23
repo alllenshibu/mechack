@@ -18,8 +18,6 @@ app.get('/', (req, res) => {
 
 console.log(getAllCategoriesController);
 
-const fetches = require('./fetchSQL'); 
-
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
