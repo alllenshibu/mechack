@@ -19,6 +19,7 @@ const getStatsService = async (user) => {
 
         console.log({ currentMonth, currentYear })
 
+        // Income for the month
         let result = await pool.query(`
                                             SELECT 
                                                 SUM(amount) 
@@ -30,7 +31,24 @@ const getStatsService = async (user) => {
                                                 AND EXTRACT(YEAR FROM date) = $3
                                         `, [userId?.rows[0]?.id, currentMonth, currentYear]);
 
-        responseData = { ...responseData, income: result?.rows[0]?.sum }
+        responseData = { ...responseData, totalIncome: result?.rows[0]?.sum }
+
+        // Income for the month
+        result = await pool.query(`
+                                            SELECT 
+                                                SUM(amount) 
+                                            FROM
+                                                expense
+                                            WHERE
+                                                user_id = $1
+                                                AND EXTRACT(MONTH FROM timestamp) = $2 
+                                                AND EXTRACT(YEAR FROM timestamp) = $3
+                                        `, [userId?.rows[0]?.id, currentMonth, currentYear]);
+
+        responseData = { ...responseData, totalExpense: result?.rows[0]?.sum }
+
+        responseData = { ...responseData, totalBalance: responseData?.totalIncome - responseData?.totalExpense }
+
         return responseData;
     } catch (err) {
         throw new Error(err.message);
