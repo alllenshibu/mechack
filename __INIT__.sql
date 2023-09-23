@@ -51,22 +51,20 @@ CREATE TABLE IF NOT EXISTS category
 INSERT INTO category (name, classification_id)
 VALUES ('Groceries', (SELECT id FROM classification WHERE name = 'needs')),
        ('Fees', (SELECT id FROM classification WHERE name = 'needs')),
-       ('Utilities (wifi, internet)', (SELECT id FROM classification WHERE name = 'needs')),
+       ('Utilities', (SELECT id FROM classification WHERE name = 'needs')),
        ('Fuel', (SELECT id FROM classification WHERE name = 'needs')),
-       ('Public Transportation', (SELECT id FROM classification WHERE name = 'needs')),
+       ('Transport', (SELECT id FROM classification WHERE name = 'needs')),
        ('Utensils', (SELECT id FROM classification WHERE name = 'needs')),
-       ('Career Development (Courses, Certificates)', (SELECT id FROM classification WHERE name = 'needs')),
-       ('College Others', (SELECT id FROM classification WHERE name = 'needs')),
+       ('Career', (SELECT id FROM classification WHERE name = 'needs')),
+       ('College', (SELECT id FROM classification WHERE name = 'needs')),
        ('Health', (SELECT id FROM classification WHERE name = 'needs')),
-       ('Utensils', (SELECT id FROM classification WHERE name = 'needs')),
 
-       ('Fast Food', (SELECT id FROM classification WHERE name = 'wants')),
+       ('Fastfood', (SELECT id FROM classification WHERE name = 'wants')),
        ('Entertainment', (SELECT id FROM classification WHERE name = 'wants')),
        ('Fashion', (SELECT id FROM classification WHERE name = 'wants')),
 
-       ('Loan/Debt', (SELECT id FROM classification WHERE name = 'savings')),
+       ('Loan', (SELECT id FROM classification WHERE name = 'savings')),
        ('Investment', (SELECT id FROM classification WHERE name = 'savings')),
-       ('College Fee', (SELECT id FROM classification WHERE name = 'savings')),
        ('Emergency', (SELECT id FROM classification WHERE name = 'savings'));
 
 
