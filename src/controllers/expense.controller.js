@@ -1,14 +1,33 @@
-const { getAllExpensesService, addNewExpenseService, getExpenseByIdService } = require('../services/expense.service');
+const {
+    getAllExpensesService,
+    getAllExpensesByMonthService,
+    getAllExpensesByYearService,
+    getAllExpensesByMonthAndYearService,
+    addNewExpenseService,
+    getExpenseByIdService
+} = require('../services/expense.service');
 
 const getAllExpensesController = async (req, res) => {
     const user = req?.user;
+
+    const month = req?.query?.month;
+    const year = req?.query?.year;
 
     if (!user || user === '' || user === undefined) {
         return res.status(400).send('User is required');
     }
 
     try {
-        result = await getAllExpensesService(user);
+        if (month) {
+            result = await getAllExpensesByMonthService(user, month);
+        } else if (year) {
+            result = await getAllExpensesByYearService(user, year);
+        } else if (month && year) {
+            result = await getAllExpensesByMonthAndYearService(user, month, year);
+        } else {
+            result = await getAllExpensesService(user);
+        }
+
         if (result) {
             res.status(200).send(result);
         }
