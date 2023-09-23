@@ -46,7 +46,7 @@ const addNewGoalController = async (req, res) => {
     const category = req?.body?.goal?.category;
     const title = req?.body?.goal?.title;
     const amount = req?.body?.goal?.amount;
-    const dueDate = req?.body?.goal?.dueDate;
+    const targetDate = req?.body?.goal?.targetDate;
 
     if (!user || user === '' || user === undefined) {
         return res.status(400).send('User is required');
@@ -60,12 +60,12 @@ const addNewGoalController = async (req, res) => {
     if (!amount || amount === '' || amount === undefined) {
         return res.status(400).send('Amount is required');
     }
-    if (!dueDate || dueDate === '' || dueDate === undefined) {
-        return res.status(400).send('Due date is required');
+    if (!targetDate || targetDate === '' || targetDate === undefined) {
+        return res.status(400).send('Target date is required');
     }
 
     try {
-        result = await addNewGoalService(user, category, title, amount, dueDate);
+        result = await addNewGoalService(user, category, title, amount, targetDate);
 
         if (result) {
 

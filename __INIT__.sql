@@ -112,7 +112,8 @@ CREATE TABLE IF NOT EXISTS goal
     title            VARCHAR(32)    NOT NULL,
     total_amount     NUMERIC(10, 2) NOT NULL,
     completed_amount NUMERIC(10, 2) NOT NULL DEFAULT 0.0,
-    due_date         TIMESTAMP      NOT NULL,
+    target_date         TIMESTAMP      NOT NULL,
+    priority         INTEGER        NOT NULL DEFAULT 0,
 
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES "user" (id),

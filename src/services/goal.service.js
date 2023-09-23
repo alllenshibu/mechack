@@ -16,6 +16,8 @@ const getAllGoalsService = async (user) => {
                                                 goal.title,
                                                 goal.total_amount,
                                                 goal.completed_amount,
+                                                goal.target_date,
+                                                goal.priority,
                                                 category.name as category,
                                                 classification.name as classification
                                             FROM 
@@ -39,7 +41,7 @@ const getAllGoalsService = async (user) => {
     }
 }
 
-
+// TODO: Add joins
 const getGoalByIdService = async (user, goalId) => {
     try {
         console.log('Getting goals by id');
@@ -61,7 +63,7 @@ const getGoalByIdService = async (user, goalId) => {
 }
 
 
-const addNewGoalService = async (user, category, title, amount, dueDate) => {
+const addNewGoalService = async (user, category, title, amount, targetDate) => {
     try {
         console.log('Adding goal');
         const userId = await pool.query('SELECT id FROM "user" WHERE email = $1', [user]);
@@ -77,8 +79,8 @@ const addNewGoalService = async (user, category, title, amount, dueDate) => {
         }
 
         const result = await pool.query(
-            'INSERT INTO goal (user_id, category_id, title, total_amount, due_date) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-            [userId?.rows[0]?.id, categoryId?.rows[0]?.id, title, amount, dueDate]);
+            'INSERT INTO goal (user_id, category_id, title, total_amount, target_date) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+            [userId?.rows[0]?.id, categoryId?.rows[0]?.id, title, amount, targetDate]);
         if (result?.rows?.length > 0) {
             return result?.rows[0]?.id;
         } else {
