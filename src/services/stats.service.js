@@ -1,3 +1,4 @@
+const { response } = require('express');
 const pool = require('../utils/pg');
 
 const getStatsService = async (user) => {
@@ -9,23 +10,28 @@ const getStatsService = async (user) => {
             throw new Error('User not found');
         }
 
+        let responseData = {}
 
-        const query = {
-            text: `SELECT 
-                        SUM(amount) 
-                    FROM
-                        expense
-                    WHERE
-                        user_id = $1
-                        AND EXTRACT(MONTH FROM expense.timestamp) = 9 
-                        AND EXTRACT(YEAR FROM expense.timestamp) = 2023
-            `,
-            values: [userId?.rows[0]?.id]
-        };
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth() + 1;
 
-        const result = await pool.query(query);
+        const currentYear = currentDate.getFullYear();
 
-        return result?.rows;
+        console.log({ currentMonth, currentYear })
+
+        let result = await pool.query(`
+                                            SELECT 
+                                                SUM(amount) 
+                                            FROM
+                                                income
+                                            WHERE
+                                                user_id = $1
+                                                AND EXTRACT(MONTH FROM date) = $2 
+                                                AND EXTRACT(YEAR FROM date) = $3
+                                        `, [userId?.rows[0]?.id, currentMonth, currentYear]);
+
+        responseData = { ...responseData, income: result?.rows[0]?.sum }
+        return responseData;
     } catch (err) {
         throw new Error(err.message);
     }

@@ -44,7 +44,7 @@ const getIncomeByIdService = async (user, incomeId) => {
 }
 
 
-const addNewIncomeService = async (user, title, amount, timestamp, stable, endsOn) => {
+const addNewIncomeService = async (user, title, amount, date, stable, endsOn) => {
     try {
         console.log('Adding income');
         const userId = await pool.query('SELECT id FROM "user" WHERE email = $1', [user]);
@@ -52,8 +52,6 @@ const addNewIncomeService = async (user, title, amount, timestamp, stable, endsO
         if (userId?.rows?.length === 0) {
             throw new Error('User not found');
         }
-
-        console.log({ stable });
 
         if (stable === true) {
             const currentDate = new Date();
@@ -66,10 +64,12 @@ const addNewIncomeService = async (user, title, amount, timestamp, stable, endsO
 
             let i = currentMonth;
             let j = currentYear;
+            let date = new Date();
             do {
                 console.log('Adding income for month: ', i);
-                const result = await pool.query('INSERT INTO income (user_id, title, amount, timestamp) VALUES ($1, $2, $3, $4) RETURNING id', [userId?.rows[0]?.id, title, amount, timestamp]);
-                (new Date(timestamp)).setMonth((new Date(timestamp)).getMonth() + 1);
+                const result = await pool.query('INSERT INTO income (user_id, title, amount, stable, date) VALUES ($1, $2, $3, true, $4) RETURNING id', [userId?.rows[0]?.id, title, amount, date]);
+                date.setMonth((new Date(date)).getMonth() + 1);
+
                 i++;
                 if (i > 12) {
                     i = 1;
@@ -85,7 +85,7 @@ const addNewIncomeService = async (user, title, amount, timestamp, stable, endsO
             } while (true);
         }
 
-        const result = await pool.query('INSERT INTO income (user_id, title, amount, timestamp) VALUES ($1, $2, $3, $4) RETURNING id', [userId?.rows[0]?.id, title, amount, timestamp]);
+        const result = await pool.query('INSERT INTO income (user_id, title, amount, date) VALUES ($1, $2, $3, $4) RETURNING id', [userId?.rows[0]?.id, title, amount, date]);
         if (result?.rows?.length > 0) {
             return result?.rows[0]?.id;
         } else {
