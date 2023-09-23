@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS category CASCADE;
 DROP TABLE IF EXISTS expense CASCADE;
 DROP TABLE IF EXISTS recurring_payment CASCADE;
 DROP TABLE IF EXISTS goal CASCADE;
-DROP TABLE IF EXISTS split CASCADE;
+DROP TABLE IF EXISTS income CASCADE;
 
 CREATE TABLE IF NOT EXISTS "user"
 (
@@ -85,18 +85,18 @@ CREATE TABLE IF NOT EXISTS goal
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES "user" (id),
     FOREIGN KEY (category_id) REFERENCES category (id)
-)
+);
 
-CREATE TABLE IF NOT EXISTS split
+CREATE TABLE IF NOT EXISTS income
 (
-    id         UUID DEFAULT uuid_generate_v4(),
+    id         UUID                    DEFAULT uuid_generate_v4(),
 
-    expense_id UUID          NOT NULL,
-    user_id    UUID          NOT NULL,
-    percentage NUMERIC(5, 2) NOT NULL
-        CONSTRAINT percentage_check CHECK (percentage >= 0 AND percentage <= 100),
+    user_id    UUID           NOT NULL,
 
-    PRIMARY KEY (id),
-    FOREIGN KEY (expense_id) REFERENCES expense (id),
-    FOREIGN KEY (user_id) REFERENCES "user" (id)
+    title      VARCHAR(32)    NOT NULL,
+    amount     NUMERIC(10, 2) NOT NULL,
+
+    timestamp  TIMESTAMP      NOT NULL,
+
+    PRIMARY KEY (id)
 );

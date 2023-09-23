@@ -5,6 +5,7 @@ const { signupController, loginController } = require('./controllers/auth.contro
 const { getAllExpensesController, addNewExpenseController, getExpenseByIdController } = require('./controllers/expense.controller');
 const { chatWithBroController } = require('./controllers/bro.controller');
 const { getAllGoalsContoller, getGoalByIdController, addNewGoalController } = require('./controllers/goal.controller');
+const { getAllIncomesController, getIncomeByIdController, addNewIncomeController } = require('./controllers/income.controller');
 
 const router = express.Router();
 
@@ -42,6 +43,19 @@ router.get("/goal/:id", authorize, (req, res) => {
 
 router.post("/goal", authorize, (req, res) => {
     addNewGoalController(req, res);
+});
+
+// Income routes
+router.get("/income", authorize, (req, res) => {
+    getAllIncomesController(req, res);
+});
+
+router.get("/income/:id", authorize, (req, res) => {
+    getIncomeByIdController(req, res);
+});
+
+router.post("/income", authorize, (req, res) => {
+    addNewIncomeController(req, res);
 });
 
 // Bro routes
