@@ -8,6 +8,7 @@ const { getAllGoalsContoller, getGoalByIdController, addNewGoalController } = re
 const { getAllIncomesController, getIncomeByIdController, addNewIncomeController } = require('./controllers/income.controller');
 const { getAllCategoriesController } = require('./controllers/category.controller');
 const { getStatsController } = require('./controllers/stats.controller');
+const { getAllUrgesController } = require('./controllers/urge.controller')
 
 const router = express.Router();
 
@@ -74,9 +75,11 @@ router.get("/stats", authorize, (req, res) => {
 router.post("/bro", authorize, (req, res) => {
     chatWithBroController(req, res);
 })
+
 //sql routes
 router.get("/urge", authorize, (req, res) => {
-        getAllCategoriesController(req, res);
+    getAllUrgesController(req, res);
+    
     });
 ;
 

@@ -9,7 +9,7 @@ const getAllCategoriesController = async (req, res) => {
     }
 
     try {
-        result = await getAllExpensesService(user);
+        result = await getAllCategoriesService(user);
         if (result) {
             res.status(200).send(result);
         }
