@@ -1,5 +1,5 @@
 
-const { getAllExpensesService } = require('../services/category.service');
+const { getAllCategoriesService } = require('../services/category.service');
 
 const getAllCategoriesController = async (req, res) => {
     const user = req?.user;
@@ -9,7 +9,7 @@ const getAllCategoriesController = async (req, res) => {
     }
 
     try {
-        result = await getAllExpensesService(user);
+        result = await getAllCategoriesService(user);
         if (result) {
             res.status(200).send(result);
         }
