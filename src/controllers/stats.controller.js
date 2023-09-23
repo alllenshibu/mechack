@@ -11,6 +11,7 @@ const getStatsController = async (req, res) => {
         result = await getStatsService(user);
         if (result) {
             res.status(200).send(result);
+            console.log(results);
         }
     } catch (err) {
         res.status(400).send(err.message);
