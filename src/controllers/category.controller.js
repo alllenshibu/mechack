@@ -1,5 +1,5 @@
 
-const { getAllExpensesService } = require('../services/category.service');
+const { getAllCategoriesService } = require('../services/category.service');
 
 const getAllCategoriesController = async (req, res) => {
     const user = req?.user;
