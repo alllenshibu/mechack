@@ -25,7 +25,6 @@ const getExpenseByIdController = async (req, res) => {
         return res.status(400).send('User is required');
     }
 
-
     if (!expenseId || expenseId === '' || expenseId === undefined) {
         return res.status(400).send('Expense Id is required');
     }

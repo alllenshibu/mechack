@@ -29,4 +29,9 @@ router.post("/expense", authorize, (req, res) => {
     addNewExpenseController(req, res);
 });
 
+//SQL routes
+router.get("/", authorize, (req,res) => {
+    getDataFromDatabase(req,res);
+})
+
 module.exports = router;
