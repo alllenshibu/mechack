@@ -121,14 +121,15 @@ CREATE TABLE IF NOT EXISTS goal
 
 CREATE TABLE IF NOT EXISTS income
 (
-    id        UUID DEFAULT uuid_generate_v4(),
+    id        UUID                    DEFAULT uuid_generate_v4(),
 
     user_id   UUID           NOT NULL,
 
     title     VARCHAR(32)    NOT NULL,
     amount    NUMERIC(10, 2) NOT NULL,
+    stable    BOOLEAN        NOT NULL DEFAULT FALSE,
 
-    timestamp TIMESTAMP      NOT NULL,
+    date     DATE           NOT NULL,
 
     PRIMARY KEY (id)
 );
