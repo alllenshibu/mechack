@@ -109,6 +109,8 @@ const getStatsService = async (user) => {
 
         responseData = { ...responseData, totalBalance: responseData?.totalIncome - responseData?.totalExpense }
 
+        // TODO: algo  ivide
+
         return responseData;
     } catch (err) {
         throw new Error(err.message);
