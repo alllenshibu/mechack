@@ -18,7 +18,8 @@ const authorize = async (req, res, next) => {
             return res.status(401).send('Unauthorized');
         }
 
-        req.user = user?.rows[0]?.username;
+        req.user = user?.rows[0]?.email;
+
         next();
     } catch (err) {
         console.log(err)
