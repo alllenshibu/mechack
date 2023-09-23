@@ -64,10 +64,12 @@ const addNewIncomeService = async (user, title, amount, date, stable, endsOn) =>
 
             let i = currentMonth;
             let j = currentYear;
+            let date = new Date();
             do {
                 console.log('Adding income for month: ', i);
                 const result = await pool.query('INSERT INTO income (user_id, title, amount, stable, date) VALUES ($1, $2, $3, true, $4) RETURNING id', [userId?.rows[0]?.id, title, amount, date]);
-                (new Date(date)).setMonth((new Date(date)).getMonth() + 1);
+                date.setMonth((new Date(date)).getMonth() + 1);
+
                 i++;
                 if (i > 12) {
                     i = 1;
