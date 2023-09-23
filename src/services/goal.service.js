@@ -9,7 +9,24 @@ const getAllGoalsService = async (user) => {
             throw new Error('User not found');
         }
 
-        const result = await pool.query('SELECT * FROM goal WHERE user_id = $1', [userId?.rows[0]?.id]);
+
+        const result = await pool.query(`
+                                            SELECT
+                                                goal.id,
+                                                goal.title,
+                                                goal.total_amount,
+                                                goal.completed_amount,
+                                                category.name as category,
+                                                classification.name as classification
+                                            FROM 
+                                                goal
+                                            JOIN 
+                                                category ON 
+                                                    goal.category_id = category.id 
+                                            JOIN 
+                                                classification ON category.classification_id = classification.id
+                                            WHERE goal.user_id = $1
+                                        `, [userId?.rows[0]?.id]);
 
         // if (result?.rows?.length > 0) {
         //     return result?.rows;
@@ -60,7 +77,7 @@ const addNewGoalService = async (user, category, title, amount, dueDate) => {
         }
 
         const result = await pool.query(
-            'INSERT INTO goal (user_id, category_id, title, amount, due_date) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+            'INSERT INTO goal (user_id, category_id, title, total_amount, due_date) VALUES ($1, $2, $3, $4, $5) RETURNING id',
             [userId?.rows[0]?.id, categoryId?.rows[0]?.id, title, amount, dueDate]);
         if (result?.rows?.length > 0) {
             return result?.rows[0]?.id;
