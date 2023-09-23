@@ -46,6 +46,7 @@ const addNewGoalController = async (req, res) => {
     const title = req?.body?.goal?.title;
     const amount = req?.body?.goal?.amount;
     const targetDate = req?.body?.goal?.targetDate;
+    const priority = req?.body?.goal?.priority;
 
     if (!user || user === '' || user === undefined) {
         return res.status(400).send('User is required');
@@ -59,9 +60,12 @@ const addNewGoalController = async (req, res) => {
     if (!targetDate || targetDate === '' || targetDate === undefined) {
         return res.status(400).send('Target date is required');
     }
+    if (!priority || priority === '' || priority === undefined) {
+        return res.status(400).send('Priority is required');
+    }
 
     try {
-        result = await addNewGoalService(user, title, amount, targetDate);
+        result = await addNewGoalService(user, title, amount, targetDate, priority);
 
         if (result) {
 
