@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS expense CASCADE;
 DROP TABLE IF EXISTS recurring_expense CASCADE;
 DROP TABLE IF EXISTS goal CASCADE;
 DROP TABLE IF EXISTS income CASCADE;
+DROP TABLE IF EXISTS monthly_stats CASCADE;
 
 CREATE TABLE IF NOT EXISTS "user"
 (
@@ -70,16 +71,16 @@ VALUES ('Groceries', (SELECT id FROM classification WHERE name = 'needs')),
 
 CREATE TABLE IF NOT EXISTS expense
 (
-    id          UUID DEFAULT uuid_generate_v4(),
+    id            UUID                    DEFAULT uuid_generate_v4(),
 
-    user_id     UUID           NOT NULL,
-    category_id UUID           NOT NULL,
+    user_id       UUID           NOT NULL,
+    category_id   UUID           NOT NULL,
 
-    title       VARCHAR(32)    NOT NULL,
-    amount      NUMERIC(10, 2) NOT NULL,
-    timestamp   TIMESTAMPTZ    NOT NULL,
+    title         VARCHAR(32)    NOT NULL,
+    amount        NUMERIC(10, 2) NOT NULL,
+    timestamp     TIMESTAMPTZ    NOT NULL,
 
-    freq_per_year INTEGER NOT NULL DEFAULT 0,
+    freq_per_year INTEGER        NOT NULL DEFAULT 0,
 
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES "user" (id),
@@ -121,15 +122,29 @@ CREATE TABLE IF NOT EXISTS goal
 
 CREATE TABLE IF NOT EXISTS income
 (
-    id        UUID                    DEFAULT uuid_generate_v4(),
+    id      UUID                    DEFAULT uuid_generate_v4(),
 
-    user_id   UUID           NOT NULL,
+    user_id UUID           NOT NULL,
 
-    title     VARCHAR(32)    NOT NULL,
-    amount    NUMERIC(10, 2) NOT NULL,
-    stable    BOOLEAN        NOT NULL DEFAULT FALSE,
+    title   VARCHAR(32)    NOT NULL,
+    amount  NUMERIC(10, 2) NOT NULL,
+    stable  BOOLEAN        NOT NULL DEFAULT FALSE,
 
-    date     DATE           NOT NULL,
+    date    DATE           NOT NULL,
+
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS monthly_stats
+(
+    id                    UUID                    DEFAULT uuid_generate_v4(),
+
+    user_id               UUID           NOT NULL,
+
+    month                 INTEGER        NOT NULL,
+    year                  INTEGER        NOT NULL,
+
+    towards_goal          NUMERIC(10, 2) NOT NULL DEFAULT 0.0,
 
     PRIMARY KEY (id)
 );
