@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS "user" CASCADE;
 DROP TABLE IF EXISTS category CASCADE;
 DROP TABLE IF EXISTS classification CASCADE;
 DROP TABLE IF EXISTS expense CASCADE;
-DROP TABLE IF EXISTS recurring_payment CASCADE;
+DROP TABLE IF EXISTS recurring_expense CASCADE;
 DROP TABLE IF EXISTS goal CASCADE;
 DROP TABLE IF EXISTS income CASCADE;
 
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS expense
     FOREIGN KEY (category_id) REFERENCES category (id)
 );
 
-CREATE TABLE IF NOT EXISTS recurring_payment
+CREATE TABLE IF NOT EXISTS recurring_expense
 (
     id          UUID DEFAULT uuid_generate_v4(),
 
@@ -112,7 +112,8 @@ CREATE TABLE IF NOT EXISTS goal
     total_amount     NUMERIC(10, 2) NOT NULL,
     completed_amount NUMERIC(10, 2) NOT NULL DEFAULT 0.0,
     target_date      TIMESTAMP      NOT NULL,
-    priority         INTEGER        NOT NULL DEFAULT 0,
+    priority         INTEGER        NOT NULL DEFAULT 0
+        CONSTRAINT priority_check CHECK (goal.priority >= 0 AND goal.priority <= 5),
 
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES "user" (id)

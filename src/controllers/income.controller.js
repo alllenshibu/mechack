@@ -42,9 +42,11 @@ const getIncomeByIdController = async (req, res) => {
 
 const addNewIncomeController = async (req, res) => {
     const user = req?.user;
-    const title = req?.body?.expense?.title;
-    const amount = req?.body?.expense?.amount;
-    const timestamp = req?.body?.expense?.timestamp;
+    const title = req?.body?.income?.title;
+    const amount = req?.body?.income?.amount;
+    const timestamp = req?.body?.income?.timestamp;
+    let stable = req?.body?.income?.stable;
+    let endsOn = req?.body?.income?.endsOn;
 
     if (!user || user === '' || user === undefined) {
         return res.status(400).send('User is required');
@@ -59,9 +61,14 @@ const addNewIncomeController = async (req, res) => {
         return res.status(400).send('Timestamp is required');
     }
 
+    if (stable === true) {
+        if (!endsOn || endsOn === '' || endsOn === undefined) {
+            return res.status(400).send('Ends on is required');
+        }
+    }
 
     try {
-        result = await addNewIncomeService(user, title, amount, timestamp);
+        result = await addNewIncomeService(user, title, amount, timestamp, stable, endsOn);
 
         if (result) {
 
