@@ -53,8 +53,6 @@ const addNewIncomeService = async (user, title, amount, date, stable, endsOn) =>
             throw new Error('User not found');
         }
 
-        console.log({ stable });
-
         if (stable === true) {
             const currentDate = new Date();
             const currentMonth = currentDate.getMonth() + 1;
@@ -68,7 +66,7 @@ const addNewIncomeService = async (user, title, amount, date, stable, endsOn) =>
             let j = currentYear;
             do {
                 console.log('Adding income for month: ', i);
-                const result = await pool.query('INSERT INTO income (user_id, title, amount, stable, date) VALUES ($1, $2, true, $3, $4) RETURNING id', [userId?.rows[0]?.id, title, amount, date]);
+                const result = await pool.query('INSERT INTO income (user_id, title, amount, stable, date) VALUES ($1, $2, $3, true, $4) RETURNING id', [userId?.rows[0]?.id, title, amount, date]);
                 (new Date(date)).setMonth((new Date(date)).getMonth() + 1);
                 i++;
                 if (i > 12) {
