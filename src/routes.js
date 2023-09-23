@@ -3,6 +3,11 @@ const express = require('express');
 const { authorize } = require('./middlewares/auth.middleware');
 const { signupController, loginController } = require('./controllers/auth.controller');
 const { getAllExpensesController, addNewExpenseController, getExpenseByIdController } = require('./controllers/expense.controller');
+const { chatWithBroController } = require('./controllers/bro.controller');
+const { getAllGoalsContoller, getGoalByIdController, addNewGoalController } = require('./controllers/goal.controller');
+const { getAllIncomesController, getIncomeByIdController, addNewIncomeController } = require('./controllers/income.controller');
+const { getAllCategoriesController } = require('./controllers/category.controller');
+const { getStatsController } = require('./controllers/stats.controller');
 
 const router = express.Router();
 
@@ -29,9 +34,45 @@ router.post("/expense", authorize, (req, res) => {
     addNewExpenseController(req, res);
 });
 
-//SQL routes
-router.get("/", authorize, (req,res) => {
-    getDataFromDatabase(req,res);
+// Expense routes
+router.get("/goal", authorize, (req, res) => {
+    getAllGoalsContoller(req, res);
+});
+
+router.get("/goal/:id", authorize, (req, res) => {
+    getGoalByIdController(req, res);
+});
+
+router.post("/goal", authorize, (req, res) => {
+    addNewGoalController(req, res);
+});
+
+// Income routes
+router.get("/income", authorize, (req, res) => {
+    getAllIncomesController(req, res);
+});
+
+router.get("/income/:id", authorize, (req, res) => {
+    getIncomeByIdController(req, res);
+});
+
+router.post("/income", authorize, (req, res) => {
+    addNewIncomeController(req, res);
+});
+
+// Category routes
+router.get("/category", authorize, (req, res) => {
+    getAllCategoriesController(req, res);
+});
+
+// Stats routes
+router.get("/stats", authorize, (req, res) => {
+    getStatsController(req, res);
 })
+
+// Bro routes
+router.post("/bro", authorize, (req, res) => {
+    chatWithBroController(req, res);
+});
 
 module.exports = router;

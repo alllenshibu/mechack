@@ -42,12 +42,16 @@ const getExpenseByIdController = async (req, res) => {
 
 const addNewExpenseController = async (req, res) => {
     const user = req?.user;
+    const category = req?.body?.expense?.category;
     const title = req?.body?.expense?.title;
     const amount = req?.body?.expense?.amount;
     const timestamp = req?.body?.expense?.timestamp;
 
     if (!user || user === '' || user === undefined) {
         return res.status(400).send('User is required');
+    }
+    if (!category || category === '' || category === undefined) {
+        return res.status(400).send('Category is required');
     }
     if (!title || title === '' || title === undefined) {
         return res.status(400).send('Title is required');
@@ -61,7 +65,7 @@ const addNewExpenseController = async (req, res) => {
 
 
     try {
-        result = await addNewExpenseService(user, title, amount, timestamp);
+        result = await addNewExpenseService(user, category, title, amount, timestamp);
 
         if (result) {
 
