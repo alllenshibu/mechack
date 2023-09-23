@@ -104,20 +104,18 @@ CREATE TABLE IF NOT EXISTS recurring_payment
 
 CREATE TABLE IF NOT EXISTS goal
 (
-    id               UUID DEFAULT uuid_generate_v4(),
+    id               UUID                    DEFAULT uuid_generate_v4(),
 
     user_id          UUID           NOT NULL,
-    category_id      UUID           NOT NULL,
 
     title            VARCHAR(32)    NOT NULL,
     total_amount     NUMERIC(10, 2) NOT NULL,
     completed_amount NUMERIC(10, 2) NOT NULL DEFAULT 0.0,
-    target_date         TIMESTAMP      NOT NULL,
+    target_date      TIMESTAMP      NOT NULL,
     priority         INTEGER        NOT NULL DEFAULT 0,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES "user" (id),
-    FOREIGN KEY (category_id) REFERENCES category (id)
+    FOREIGN KEY (user_id) REFERENCES "user" (id)
 );
 
 CREATE TABLE IF NOT EXISTS income

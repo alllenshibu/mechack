@@ -43,16 +43,12 @@ const getGoalByIdController = async (req, res) => {
 
 const addNewGoalController = async (req, res) => {
     const user = req?.user;
-    const category = req?.body?.goal?.category;
     const title = req?.body?.goal?.title;
     const amount = req?.body?.goal?.amount;
     const targetDate = req?.body?.goal?.targetDate;
 
     if (!user || user === '' || user === undefined) {
         return res.status(400).send('User is required');
-    }
-    if (!category || category === '' || category === undefined) {
-        return res.status(400).send('Category is required');
     }
     if (!title || title === '' || title === undefined) {
         return res.status(400).send('Title is required');
@@ -65,7 +61,7 @@ const addNewGoalController = async (req, res) => {
     }
 
     try {
-        result = await addNewGoalService(user, category, title, amount, targetDate);
+        result = await addNewGoalService(user, title, amount, targetDate);
 
         if (result) {
 
