@@ -4,6 +4,7 @@ const signupController = async (req, res) => {
     const name = req?.body?.name;
     const email = req?.body?.email;
     const password = req?.body?.password;
+    const dob = req?.body?.dob;
 
     if (!name || name === '' || name === undefined) {
         return res.status(400).send('Name is required');
@@ -14,9 +15,12 @@ const signupController = async (req, res) => {
     if (!password || password === '' || password === undefined) {
         return res.status(400).send('Password is required');
     }
+    if (!dob || dob === '' || dob === undefined) {
+        return res.status(400).send('Date of birth is required');
+    }
 
     try {
-        token = await signupService(name, email, password);
+        token = await signupService(name, email, password, dob);
         if (token) {
             const message = {
                 token: token

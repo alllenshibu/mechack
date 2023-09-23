@@ -1,6 +1,6 @@
 const pool = require('../utils/pg');
 
-const signupService = async (name, email, password) => {
+const signupService = async (name, email, password, dob) => {
     try {
         let user = await pool.query('SELECT * FROM "user" WHERE email = $1', [email]);
 
@@ -9,7 +9,7 @@ const signupService = async (name, email, password) => {
         }
 
         console.log('Creating user');
-        const result = await pool.query('INSERT INTO "user" (name, email, password) VALUES ($1, $2, $3) RETURNING *', [name, email, password]);
+        const result = await pool.query('INSERT INTO "user" (name, email, password, dob) VALUES ($1, $2, $3, $4) RETURNING *', [name, email, password, dob]);
 
         if (result?.rows?.length > 0) {
             return result?.rows[0]?.id;
