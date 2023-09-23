@@ -1,6 +1,6 @@
-const { getStatsService } = require("../services/stats.service");
+const { getUserDetailsByIdService } = require('../services/user.service');
 
-const getStatsController = async (req, res) => {
+const getUserDetailsByIdController = async (req, res) => {
     const user = req?.user;
 
     if (!user || user === '' || user === undefined) {
@@ -8,17 +8,15 @@ const getStatsController = async (req, res) => {
     }
 
     try {
-        result = await getStatsService(user);
+        result = await getUserDetailsByIdService(user);
         if (result) {
             res.status(200).send(result);
-            console.log(results);
         }
     } catch (err) {
         res.status(400).send(err.message);
     }
 }
 
-
 module.exports = {
-    getStatsController
+    getUserDetailsByIdController
 }

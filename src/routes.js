@@ -8,6 +8,8 @@ const { getAllGoalsContoller, getGoalByIdController, addNewGoalController } = re
 const { getAllIncomesController, getIncomeByIdController, addNewIncomeController } = require('./controllers/income.controller');
 const { getAllCategoriesController } = require('./controllers/category.controller');
 const { getStatsController } = require('./controllers/stats.controller');
+const { getUserDetailsByIdController } = require('./controllers/user.controller');
+const { getUrgeCategoryController } = require('./controllers/urge.controller')
 
 const router = express.Router();
 
@@ -70,9 +72,20 @@ router.get("/stats", authorize, (req, res) => {
     getStatsController(req, res);
 })
 
+// User routes
+router.get("/user", authorize, (req, res) => {
+    getUserDetailsByIdController(req, res);
+});
+
 // Bro routes
 router.post("/bro", authorize, (req, res) => {
     chatWithBroController(req, res);
+})
+
+//sql routes
+router.get("/urge", authorize, (req, res) => {
+    getUrgeCategoryController(req, res);
 });
+;
 
 module.exports = router;
