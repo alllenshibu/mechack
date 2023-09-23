@@ -4,6 +4,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 DROP TABLE IF EXISTS "user" CASCADE;
 DROP TABLE IF EXISTS category CASCADE;
+DROP TABLE IF EXISTS classification CASCADE;
 DROP TABLE IF EXISTS expense CASCADE;
 DROP TABLE IF EXISTS recurring_payment CASCADE;
 DROP TABLE IF EXISTS goal CASCADE;
@@ -21,21 +22,53 @@ CREATE TABLE IF NOT EXISTS "user"
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS category
+CREATE TABLE IF NOT EXISTS classification
 (
-    id   UUID DEFAULT uuid_generate_v4(),
-    name VARCHAR(32) NOT NULL,
+    id         UUID DEFAULT uuid_generate_v4(),
+
+    name      VARCHAR(32) NOT NULL,
 
     PRIMARY KEY (id)
 );
 
-INSERT INTO category (name)
-VALUES ('Groceries'),
-       ('Rent'),
-       ('Debt'),
-       ('Entertainment'),
-       ('Utilities'),
-       ('Other');
+INSERT INTO classification (name)
+VALUES ('Wants'),
+       ('Needs'),
+       ('Savings');
+
+CREATE TABLE IF NOT EXISTS category
+(
+    id   UUID DEFAULT uuid_generate_v4(),
+
+    classification_id UUID NOT NULL,
+
+    name VARCHAR(32) NOT NULL,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (classification_id) REFERENCES classification (id)
+);
+
+INSERT INTO category (name, classification_id)
+VALUES ('Groceries', (SELECT id FROM classification WHERE name = 'Needs')),
+       ('Rent', (SELECT id FROM classification WHERE name = 'Needs')),
+       ('Debt', (SELECT id FROM classification WHERE name = 'Needs')),
+       ('Entertainment', (SELECT id FROM classification WHERE name = 'Wants')),
+       ('Utilities', (SELECT id FROM classification WHERE name = 'Needs')),
+       ('Other', (SELECT id FROM classification WHERE name = 'Wants'));
+
+CREATE TABLE IF NOT EXISTS classification
+(
+    id         UUID DEFAULT uuid_generate_v4(),
+
+    name      VARCHAR(32) NOT NULL,
+
+    PRIMARY KEY (id)
+);
+
+INSERT INTO classification (name)
+VALUES ('Wants'),
+       ('Needs'),
+       ('Savings');
 
 CREATE TABLE IF NOT EXISTS expense
 (

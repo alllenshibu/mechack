@@ -9,7 +9,23 @@ const getAllExpensesService = async (user) => {
             throw new Error('User not found');
         }
 
-        const result = await pool.query('SELECT * FROM expense WHERE user_id = $1', [userId?.rows[0]?.id]);
+        const result = await pool.query(`
+                                            SELECT
+                                                expense.id,
+                                                expense.title,
+                                                expense.amount,
+                                                expense.timestamp,
+                                                category.name as category,
+                                                classification.name as classification
+                                            FROM 
+                                                expense
+                                            JOIN 
+                                                category ON 
+                                                    expense.category_id = category.id 
+                                            JOIN 
+                                                classification ON category.classification_id = classification.id
+                                            WHERE expense.user_id = $1
+                                        `, [userId?.rows[0]?.id]);
 
         // if (result?.rows?.length > 0) {
         //     return result?.rows;
