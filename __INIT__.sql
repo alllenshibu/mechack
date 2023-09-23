@@ -79,6 +79,8 @@ CREATE TABLE IF NOT EXISTS expense
     amount      NUMERIC(10, 2) NOT NULL,
     timestamp   TIMESTAMPTZ    NOT NULL,
 
+    freq_per_year INTEGER NOT NULL DEFAULT 0,
+
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES "user" (id),
     FOREIGN KEY (category_id) REFERENCES category (id)

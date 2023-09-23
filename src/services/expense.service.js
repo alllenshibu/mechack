@@ -15,6 +15,7 @@ const getAllExpensesService = async (user) => {
                                                 expense.title,
                                                 expense.amount,
                                                 expense.timestamp,
+                                                expense.freq_per_year,
                                                 category.name as category,
                                                 classification.name as classification
                                             FROM 
@@ -54,6 +55,7 @@ const getAllExpensesByMonthService = async (user, month) => {
                                                 expense.title,
                                                 expense.amount,
                                                 expense.timestamp,
+                                                expense.freq_per_year,
                                                 category.name as category,
                                                 classification.name as classification
                                             FROM 
@@ -94,6 +96,7 @@ const getAllExpensesByYearService = async (user, year) => {
                                                 expense.title,
                                                 expense.amount,
                                                 expense.timestamp,
+                                                expense.freq_per_year,
                                                 category.name as category,
                                                 classification.name as classification
                                             FROM 
