@@ -33,7 +33,7 @@ const getStatsService = async (user) => {
 
         responseData = { ...responseData, totalIncome: result?.rows[0]?.sum }
 
-        // Income for the month
+        // Expense for the month
         result = await pool.query(`
                                             SELECT 
                                                 SUM(amount) 
@@ -47,6 +47,63 @@ const getStatsService = async (user) => {
 
         responseData = { ...responseData, totalExpense: result?.rows[0]?.sum }
 
+        // Needs expense for the month
+        result = await pool.query(`
+                                            SELECT 
+                                                SUM(amount) 
+                                            FROM
+                                                expense
+                                            JOIN
+                                                category ON category.id = expense.category_id
+                                            JOIN 
+                                                classification ON classification.id = category.classification_id
+                                            WHERE
+                                                user_id = $1
+                                                AND classification.name = 'needs'
+                                                AND EXTRACT(MONTH FROM expense.timestamp) = $2 
+                                                AND EXTRACT(YEAR FROM expense.timestamp) = $3
+                                        `, [userId?.rows[0]?.id, currentMonth, currentYear]);
+
+        responseData = { ...responseData, totalNeedsExpense: result?.rows[0]?.sum }
+
+        // Wants expense for the month
+        result = await pool.query(`
+                                            SELECT 
+                                                SUM(amount) 
+                                            FROM
+                                                expense
+                                            JOIN
+                                                category ON category.id = expense.category_id
+                                            JOIN 
+                                                classification ON classification.id = category.classification_id
+                                            WHERE
+                                                user_id = $1
+                                                AND classification.name = 'wants'
+                                                AND EXTRACT(MONTH FROM expense.timestamp) = $2 
+                                                AND EXTRACT(YEAR FROM expense.timestamp) = $3
+                                        `, [userId?.rows[0]?.id, currentMonth, currentYear]);
+
+        responseData = { ...responseData, totalWantsExpense: result?.rows[0]?.sum }
+
+        // Savings expense for the month
+        result = await pool.query(`
+                                            SELECT 
+                                                SUM(amount) 
+                                            FROM
+                                                expense
+                                            JOIN
+                                                category ON category.id = expense.category_id
+                                            JOIN 
+                                                classification ON classification.id = category.classification_id
+                                            WHERE
+                                                user_id = $1
+                                                AND classification.name = 'savings'
+                                                AND EXTRACT(MONTH FROM expense.timestamp) = $2 
+                                                AND EXTRACT(YEAR FROM expense.timestamp) = $3
+                                        `, [userId?.rows[0]?.id, currentMonth, currentYear]);
+
+        responseData = { ...responseData, totalSavingsExpense: result?.rows[0]?.sum }
+
         responseData = { ...responseData, totalBalance: responseData?.totalIncome - responseData?.totalExpense }
 
         return responseData;
@@ -54,7 +111,6 @@ const getStatsService = async (user) => {
         throw new Error(err.message);
     }
 }
-
 
 module.exports = {
     getStatsService

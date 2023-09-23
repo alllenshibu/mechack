@@ -10,6 +10,7 @@ require('dotenv').config(); // Load environment variables from .env file
 const express = require('express');
 const app = express();
 const { Pool } = require('pg'); // Import the Pool class from pg
+const { getAllCategoriesController } = require('./controllers/category.controller');
 
 //import mysql from 'mysql2/promise';
 
@@ -22,6 +23,10 @@ const dbConfig = {
 };
 
 const openaiApiKey = process.env.OPENAI_API_KEY
+
+console.log(getAllCategoriesController);
+
+/*
 app.get('/fetch-data', async (req, res) => {
     try {
       const client = await pool.connect(); // Acquire a PostgreSQL client
@@ -47,7 +52,7 @@ app.get('/fetch-data', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-
+*/
 
 /*
 const getDataFromDatabase = async () => {

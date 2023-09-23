@@ -64,37 +64,28 @@ const getGoalByIdService = async (user, goalId) => {
   }
 };
 
-const addNewGoalService = async (
-  user,
-  title,
-  amount,
-  targetDate,
-  currentSaved,
-  priority
-) => {
-  try {
-    console.log("Adding goal");
-    const userId = await pool.query('SELECT id FROM "user" WHERE email = $1', [
-      user,
-    ]);
+const addNewGoalService = async (user, title, amount, targetDate, priority) => {
+    try {
+        console.log('Adding goal');
+        const userId = await pool.query('SELECT id FROM "user" WHERE email = $1', [user]);
 
     if (userId?.rows?.length === 0) {
       throw new Error("User not found");
     }
 
-    const result = await pool.query(
-      "INSERT INTO goal (user_id, title, total_amount, target_date, completed_amount, priority) VALUES ($1, $2, $3, $4,$5,$6) RETURNING id",
-      [userId?.rows[0]?.id, title, amount, targetDate, currentSaved, priority]
-    );
-    if (result?.rows?.length > 0) {
-      return result?.rows[0]?.id;
-    } else {
-      throw new Error("Something went wrong");
+        const result = await pool.query(
+            'INSERT INTO goal (user_id, title, total_amount, target_date, priority) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+            [userId?.rows[0]?.id, title, amount, targetDate, priority]);
+        if (result?.rows?.length > 0) {
+            return result?.rows[0]?.id;
+        } else {
+            throw new Error('Something went wrong');
+        }
+    } catch (err) {
+
+        throw new Error(err.message);
     }
-  } catch (err) {
-    throw new Error(err.message);
-  }
-};
+}
 
 module.exports = {
   getAllGoalsService,

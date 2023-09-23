@@ -45,43 +45,30 @@ const getGoalByIdController = async (req, res) => {
 };
 
 const addNewGoalController = async (req, res) => {
-  const user = req?.user;
-  const title = req?.body?.goal?.title;
-  const amount = req?.body?.goal?.amount;
-  const targetDate = req?.body?.goal?.targetDate;
-  const currentSaved = req?.body?.goal?.currentSaved;
-  const priority = req?.body?.goal?.priority;
-  // current saved
-  // priority
+    const user = req?.user;
+    const title = req?.body?.goal?.title;
+    const amount = req?.body?.goal?.amount;
+    const targetDate = req?.body?.goal?.targetDate;
+    const priority = req?.body?.goal?.priority;
 
-  if (!user || user === "" || user === undefined) {
-    return res.status(400).send("User is required");
-  }
-  if (!title || title === "" || title === undefined) {
-    return res.status(400).send("Title is required");
-  }
-  if (!amount || amount === "" || amount === undefined) {
-    return res.status(400).send("Amount is required");
-  }
-  if (!targetDate || targetDate === "" || targetDate === undefined) {
-    return res.status(400).send("Target date is required");
-  }
-  if (!currentSaved || currentSaved === "" || currentSaved === undefined) {
-    return res.status(400).send("Target date is required");
-  }
-  if (!priority || priority === "" || priority === undefined) {
-    return res.status(400).send("Target date is required");
-  }
+    if (!user || user === '' || user === undefined) {
+        return res.status(400).send('User is required');
+    }
+    if (!title || title === '' || title === undefined) {
+        return res.status(400).send('Title is required');
+    }
+    if (!amount || amount === '' || amount === undefined) {
+        return res.status(400).send('Amount is required');
+    }
+    if (!targetDate || targetDate === '' || targetDate === undefined) {
+        return res.status(400).send('Target date is required');
+    }
+    if (!priority || priority === '' || priority === undefined) {
+        return res.status(400).send('Priority is required');
+    }
 
-  try {
-    result = await addNewGoalService(
-      user,
-      title,
-      amount,
-      targetDate,
-      currentSaved,
-      priority
-    );
+    try {
+        result = await addNewGoalService(user, title, amount, targetDate, priority);
 
     if (result) {
       res.status(200).send(result);

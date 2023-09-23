@@ -1,7 +1,5 @@
 const { openai } = require("../utils/openai");
 
-
-
 const chatWithBroService = async (prompt) => {
     try {
 
@@ -12,7 +10,6 @@ const chatWithBroService = async (prompt) => {
         });
 
         console.log(response.choices[0].message.content)
-
 
         return response.choices[0].message.content;
     } catch (err) {
