@@ -65,6 +65,7 @@ const addNewExpenseController = async (req, res) => {
     const title = req?.body?.expense?.title;
     const amount = req?.body?.expense?.amount;
     const timestamp = req?.body?.expense?.timestamp;
+    const freq_per_year = req?.body?.expense?.freq_per_year;
 
     if (!user || user === '' || user === undefined) {
         return res.status(400).send('User is required');
@@ -81,10 +82,12 @@ const addNewExpenseController = async (req, res) => {
     if (!timestamp || timestamp === '' || timestamp === undefined) {
         return res.status(400).send('Timestamp is required');
     }
-
+    if (!freq_per_year || freq_per_year === '' || freq_per_year === undefined) {
+        return res.status(400).send('Frequency per year is required');
+    }
 
     try {
-        result = await addNewExpenseService(user, category, title, amount, timestamp);
+        result = await addNewExpenseService(user, category, title, amount, timestamp, freq_per_year);
 
         if (result) {
 
