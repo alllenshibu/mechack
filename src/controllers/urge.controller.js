@@ -10,8 +10,6 @@ const getUrgeCategoryController = async (req, res) => {
   const user = req?.user;
   const userItem = req?.body?.userItem;
 
-
-
   if (!user || user === '' || user === undefined) {
     return res.status(400).send('User is required');
   }
@@ -26,7 +24,11 @@ const getUrgeCategoryController = async (req, res) => {
 
     console.log(JSON.stringify(response));
     /* how it shud  */
-
+    function determineCategory(scores) {
+        const maxIndex = scores.indexOf(Math.max(...scores));
+        const categories = ['wants', 'needs', 'savings'];
+        return categories[maxIndex];
+      }
     if (!userItem) {
       return res.status(400).send('User item is required in the request body.');
     }
