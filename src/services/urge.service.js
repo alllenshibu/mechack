@@ -1,91 +1,50 @@
 const pool = require('../utils/pg');
 const { OpenAIApi } = require('openai'); 
 const { HfInference } = require('@huggingface/inference');
-//const { pipeline } = require('@huggingface/agents')
-//const readline = require('readline');
+const { pipeline } = require('@huggingface/agents')
 const fetch = require('node-fetch');
+
 const openaiApiKey = process.env.OPENAI_API_KEY 
 const accessToken = process.env.HF_API_TOKEN
 
-//user input 
-/*const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  }); */
-  async function queryHuggingFaceAPI(data) {
-    try {
-      const response = await fetch(
-        'https://api-inference.huggingface.co/models/sileod/deberta-v3-base-tasksource-nli',
-        {
-          headers: { Authorization: `Bearer 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` },
-          method: 'POST',
-          body: JSON.stringify(data),
-        }
-      );
-  
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      throw new Error(`Error in queryHuggingFaceAPI: ${error.message}`);
+//INITIALISE INFERENCE
+//const inference = new HfInference(accessToken);
+
+//model stuff 
+//const model = "sileod/mdeberta-v3-base-tasksource-nli";
+//const nlp = pipeline("zero-shot-classification", { model });
+const userInput = {
+    inputs: 'smartphone',
+    parameters: {
+      candidate_labels: ['savings', 'needs', 'wants']
     }
-  }
-  
-  module.exports = {
-    queryHuggingFaceAPI,
-  };
+  }; 
 
-  /*Verzion 1 
-  async function getUserInput() {
-    const userInputString = await getUserInput(`Enter the item you want to categorize & it's cost(comma separated`);//, max_length=32); // ); 
-    const [userItem, itemExpense] = userInputString.split(',');
-    console.log(userItem, itemExpense);
-    
-      // Check if the user input is valid (item is a string, cost is an integer)
-    if (typeof userItem !== 'string' || isNaN(parseInt(itemExpense))) {
-        throw new Error('Invalid user input. Please enter a valid item and cost.');
-    }
-
-    const modelPrompt = userItem;
-    
-    return { modelPrompt, itemExpense: parseInt(itemExpense) };
-  }
-
-async function queryHuggingFaceAPI(data) {
+async function queryHuggingFaceAPI(userInput) {
     const response = await fetch(
       'https://api-inference.huggingface.co/models/sileod/deberta-v3-base-tasksource-nli',
       {
         headers: { Authorization: `Bearer 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`},
         method: 'POST',
-        body: JSON.stringify(data),
+        body: JSON.stringify(userInput),
       }
     );
     const result = await response.json();
     return result;
-  }
-  queryHuggingFaceAPI({"inputs": getUserInput().modelPrompt, 
-    "parameters": {
-        "candidate_labels": ["savings", "needs", "wants"]
-        }}).then((response) => {
-        console.log(JSON.stringify(response));
-    });
- end version 1*/
+  } 
 
-/*function getUserInput() {
-    rl.question("Enter the item (desc atleast 3 words): ", async (prompt) => {
-        const result = await inference.classifier(model, [prompt] , {
-          candidate_labels: [ 
-            "wants", 
-            "needs", 
-            "savings"],
-        });
-        
-        console.log(result);
-        
-        rl.close();
-      });
-    } 
-    getUserInput();
-*/
+  queryHuggingFaceAPI(userInput)
+  .then((response) => {
+    console.log(JSON.stringify(response));
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  }); 
+  /*
+  queryHuggingFaceAPI({userInput
+        }).then((response) => {
+        console.log(JSON.stringify(response));
+    });   */
 
 /*const getAllUrgesService = async (user) => {
     try {
@@ -113,15 +72,9 @@ async function queryHuggingFaceAPI(data) {
 module.exports = {
   //  getAllUrgesService,
     queryHuggingFaceAPI
-} 
-
+}
 /*how to 
-//INITIALISE INFERENCE
-//const inference = new HfInference(accessToken);
 
-//model stuff 
-//const model = "sileod/mdeberta-v3-base-tasksource-nli";
-//const nlp = pipeline("zero-shot-classification", { model });
 /*Use this model with the Inference API
 
 async function query(data) {
@@ -144,7 +97,7 @@ query({"inputs": "Hi, I recently bought a device from your company but it is not
 /* from transformers import pipeline
 
 pipe = pipeline(model="facebook/bart-large-mnli")
-pipeline("I have a problem with my iphone that needs to be resolved asap!",
+pipe("I have a problem with my iphone that needs to be resolved asap!",
     candidate_labels=["urgent", "not urgent", "phone", "tablet", "computer"],
 )const labels =[ 
     "wants", 
