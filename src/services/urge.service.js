@@ -50,7 +50,7 @@ async function queryHuggingFaceAPI(data) {
   const result = await response.json();
   
   //return result;
-  const category = determineCategory(result.scores);
+  const category = determineCategory(result.scores); 
 //   console.log(category);
   //get category current remaining income
   /*const income = await getIncomeByCategory(category);
