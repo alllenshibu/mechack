@@ -2,7 +2,7 @@ const { response } = require("express");
 const pool = require("../utils/pg");
 const { getAllGoalsService } = require("./goal.service");
 const { addNewExpenseService } = require("./expense.service");
-
+const { getAllGoalsContoller } = require("../controllers/goal.controller");
 const getStatsService = async (user) => {
   try {
     const userId = await pool.query('SELECT id FROM "user" WHERE email = $1', [
@@ -129,9 +129,12 @@ const getStatsService = async (user) => {
       ...responseData,
       totalBalance: responseData?.totalIncome - responseData?.totalExpense,
     };
-
+    //console.log(responseData)
     // TODO: algo  ivide
-    goals = await getAllGoalsContoller(user);
+    const goals = await getAllGoalsService(user);
+    //console.log(goals)
+    const fixedSavingsPerMonth = responseData.totalIncome / 20;
+    //console.log(fixedSavingsPerMonth)
     function calculateSavingsAllocation(
       goals,
       currentDate,
@@ -140,20 +143,21 @@ const getStatsService = async (user) => {
       const result = [];
 
       for (const goal of goals) {
-        const targetDate = new Date(goal.targetDate);
-        const amount = goal.amount;
+        const targetDate = goal.target_date
+        const amount = goal.total_amount;
         const completed_amount = goal.completed_amount;
 
         // Calculate months remaining
+        //console.log(targetDate - currentDate)
         const monthsRemaining =
           (targetDate - currentDate) / (30 * 24 * 60 * 60 * 1000);
-
+        //console.log(monthsRemaining)
         // Calculate monthly savings required
         const monthlySavingsRequired =
-          (amount - completed_amount) / monthsRemaining;
-
+          (amount - completed_amount)  / monthsRemaining;
+        //console.log(monthlySavingsRequired)
         // Check if the goal is achievable
-        const achievable = monthlySavingsRequired <= fixedSavingsPerMonth;
+        const achievable = monthlySavingsRequired <= (fixedSavingsPerMonth);
 
         // Calculate the percentage of savings allocation
         let percentageOfSavings = 0; // Initialize as 0
@@ -181,8 +185,8 @@ const getStatsService = async (user) => {
       currentDate,
       fixedSavingsPerMonth
     );
-
-    return res;
+        //console.log(res)
+    return [res,responseData];
   } catch (err) {
     throw new Error(err.message);
   }
@@ -235,7 +239,7 @@ const bigBrainIdeaService = async (user) => {
       parseFloat(totalBalance) - parseFloat(totalRemainingGoalAmount);
     const amountAssignedPerGoal = amountAssignedToGoals / numberOfGoals;
 
-    console.log({ goals });
+    //console.log({ goals });
 
     for (let goal of goals) {
       let completed_amount = parseFloat(goal?.completed_amount);
