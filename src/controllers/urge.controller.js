@@ -9,9 +9,7 @@ const userInput = {
 const getUrgeCategoryController = async (req, res) => {
   const user = req?.user;
   const userItem = req?.body?.userItem;
-
-
-
+    console.log(userItem)
   if (!user || user === '' || user === undefined) {
     return res.status(400).send('User is required');
   }
@@ -24,9 +22,13 @@ const getUrgeCategoryController = async (req, res) => {
       }
     })
 
-    console.log(JSON.stringify(response));
+    console.log(response[0]);
     /* how it shud  */
-
+    function determineCategory(scores) {
+        const maxIndex = scores.indexOf(Math.max(...scores));
+        const categories = ['wants', 'needs', 'savings'];
+        return categories[maxIndex];
+      }
     if (!userItem) {
       return res.status(400).send('User item is required in the request body.');
     }
@@ -51,16 +53,18 @@ const getUrgeCategoryController = async (req, res) => {
            candidate_labels: ['savings', 'needs', 'wants']
          } 
        });   */
-
-    if (result) {
-      res.status(200).send(result);
-    } else if (result.error === "Model sileod/deberta-v3-base-tasksource-nli is currently loading") {
-      // Wait for some time before retrying
-      await sleep(5000);
-    } else {
-      res.status(400).send('An error occurred while processing the request.');
-    }
-  } catch (err) {
+       res.status(200).send(result);
+//     if (result) {
+//       res.status(200).send(result);
+//     } else if (result.error === "Model sileod/deberta-v3-base-tasksource-nli is currently loading") {
+//       // Wait for some time before retrying
+//       await sleep(5000);
+//     } else {
+//       res.status(400).send('An error occurred while processing the request.');
+//     }
+//   
+} 
+  catch (err) {
     res.status(400).send(err.message);
   }
 };
