@@ -87,7 +87,7 @@ router.post("/bro", authorize, (req, res) => {
 //sql routes
 router.post("/urge", authorize, (req, res) => {
     getUrgeCategoryController(req, res);
-    // console.log(req.body)
+    console.log(req.body)
 });
 
 // Big brain routes

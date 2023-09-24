@@ -9,14 +9,14 @@ const userInput = {
 const getUrgeCategoryController = async (req, res) => {
   const user = req?.user;
   const userItem = req?.body?.userItem;
-    console.log(userItem)
+    // console.log(userItem)
   if (!user || user === '' || user === undefined) {
     return res.status(400).send('User is required');
   }
   try {
     /* reference, works in services   */
     const response = await queryHuggingFaceAPI({
-      "inputs": "ice cream",
+      "inputs": `${userItem}`,
       "parameters": {
         "candidate_labels": ["savings", "needs", "wants"]
       }
@@ -53,7 +53,7 @@ const getUrgeCategoryController = async (req, res) => {
            candidate_labels: ['savings', 'needs', 'wants']
          } 
        });   */
-       res.status(200).send(result);
+       res.status(200).send(response[0]);
 //     if (result) {
 //       res.status(200).send(result);
 //     } else if (result.error === "Model sileod/deberta-v3-base-tasksource-nli is currently loading") {
