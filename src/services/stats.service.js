@@ -171,7 +171,7 @@ const getStatsService = async (user) => {
 
         result.push({
           percentageOfSavings: percentageOfSavings.toFixed(2),
-          achievableOrNot: achievable ? "Yes" : "No",
+          achiveableOrNot: achievable ? "Yes" : "No",
         });
       }
 

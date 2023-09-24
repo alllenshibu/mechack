@@ -19,17 +19,27 @@ const userInput = {
     candidate_labels: ['savings', 'needs', 'wants']
   }
 };
+function determineCategory(scores) {
+    // Find the index of the maximum score
+    const maxIndex = scores.indexOf(Math.max(...scores));
+  
+    // Define the categories
+    const categories = ['wants', 'needs', 'savings'];
+  
+    // Return the category with the highest score
+    return categories[maxIndex];
+  }
 
 async function queryHuggingFaceAPI(data) {
   console.log("booooom")
-
+  const userItem = data.inputs;
   const response = await fetch(
     'https://api-inference.huggingface.co/models/sileod/deberta-v3-base-tasksource-nli',
     {
       headers: { Authorization: `Bearer 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` },
       method: 'POST',
       body: JSON.stringify({
-        inputs: 'smartphone',
+        inputs: `${userItem}`,
         parameters: {
           candidate_labels: ['savings', 'needs', 'wants']
         }
@@ -37,11 +47,15 @@ async function queryHuggingFaceAPI(data) {
       // 'Content-Type': 'application/json',
     }
   );
-
-
   const result = await response.json();
-  console.log(result)
-  return result;
+  
+  //return result;
+  const category = determineCategory(result.scores); 
+//   console.log(category);
+  //get category current remaining income
+  /*const income = await getIncomeByCategory(category);
+  console.log(`Income for ${category}: ${income}`); */
+  return [category, result];
 }
 
 module.exports = {
