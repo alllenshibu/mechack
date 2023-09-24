@@ -2,7 +2,7 @@ const { queryHuggingFaceAPI } = require('../services/urge.service');
 const userInput = {
   inputs: 'ice cream',
   parameters: {
-    candidate_labels: ['savings', 'needs', 'wants']
+    candidate_labels: ['saving', 'need', 'want']
   }
 };
 // Define the controller function
@@ -18,11 +18,11 @@ const getUrgeCategoryController = async (req, res) => {
     const response = await queryHuggingFaceAPI({
       "inputs": `${userItem}`,
       "parameters": {
-        "candidate_labels": ["savings", "needs", "wants"]
+        "candidate_labels": ["saving", "need", "want"]
       }
     })
 
-    console.log(response[0]);
+    console.log(response);
     /* how it shud  */
     function determineCategory(scores) {
         const maxIndex = scores.indexOf(Math.max(...scores));
@@ -53,7 +53,7 @@ const getUrgeCategoryController = async (req, res) => {
            candidate_labels: ['savings', 'needs', 'wants']
          } 
        });   */
-       res.status(200).send(response[0]);
+       res.status(200).send(response);
 //     if (result) {
 //       res.status(200).send(result);
 //     } else if (result.error === "Model sileod/deberta-v3-base-tasksource-nli is currently loading") {

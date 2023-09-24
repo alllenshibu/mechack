@@ -21,8 +21,9 @@ const userInput = {
 };
 function determineCategory(scores) {
     // Find the index of the maximum score
+    // console.log(scores)
     const maxIndex = scores.indexOf(Math.max(...scores));
-  
+    // console.log(maxIndex)
     // Define the categories
     const categories = ['wants', 'needs', 'savings'];
   
@@ -41,21 +42,21 @@ async function queryHuggingFaceAPI(data) {
       body: JSON.stringify({
         inputs: `${userItem}`,
         parameters: {
-          candidate_labels: ['savings', 'needs', 'wants']
+          candidate_labels: ['saving', 'need', 'want']
         }
       }),
       // 'Content-Type': 'application/json',
     }
   );
   const result = await response.json();
-  
+  // console.log(result)
   //return result;
-  const category = determineCategory(result.scores); 
+  // const category = determineCategory(result.scores); 
 //   console.log(category);
   //get category current remaining income
   /*const income = await getIncomeByCategory(category);
   console.log(`Income for ${category}: ${income}`); */
-  return [category, result];
+  return result?.labels[0];
 }
 
 module.exports = {
