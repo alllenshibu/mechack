@@ -6,7 +6,11 @@ const port = process.env.PORT || 3001
 var cors = require('cors')
 const bodyParser = require('body-parser')
 const { getAllCategoriesController } = require('./controllers/category.controller');
-app.use(cors())
+app.use(cors(
+    cors({
+        origin: ['https://zenithweb.netlify.app','http://localhost:5173']
+    })
+))
 
 const router = require('./routes');
 const { getUrgeCategoryController } = require('./controllers/urge.controller')
