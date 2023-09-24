@@ -48,11 +48,14 @@ async function queryHuggingFaceAPI(data) {
     }
   );
   const result = await response.json();
-  console.log(result);
+  
   //return result;
   const category = determineCategory(result.scores);
-  console.log(category);
-    
+//   console.log(category);
+  //get category current remaining income
+  /*const income = await getIncomeByCategory(category);
+  console.log(`Income for ${category}: ${income}`); */
+  return [category, result];
 }
 
 module.exports = {
