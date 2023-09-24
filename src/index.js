@@ -10,6 +10,7 @@ app.use(cors())
 
 const router = require('./routes');
 const { getUrgeCategoryController } = require('./controllers/urge.controller')
+const { queryHuggingFaceAPI } = require('./services/urge.service')
 
 app.use(bodyParser.json());
 
@@ -18,9 +19,8 @@ app.use('/api', router);
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
-
 console.log(getAllCategoriesController);
-console.log(getUrgeCategoryController);
+console.log(queryHuggingFaceAPI);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

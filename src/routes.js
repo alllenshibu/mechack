@@ -11,6 +11,7 @@ const { getStatsController } = require('./controllers/stats.controller');
 const { getUserDetailsByIdController } = require('./controllers/user.controller');
 const { getUrgeCategoryController } = require('./controllers/urge.controller');
 const { bigBrainIdeaService } = require('./services/stats.service');
+const { queryHuggingFaceAPI } = require('./services/urge.service');
 
 const router = express.Router();
 
@@ -71,7 +72,6 @@ router.get("/category", authorize, (req, res) => {
 // Stats routes
 router.get("/stats", authorize, (req, res) => {
     getStatsController(req, res);
-    
 })
 
 // User routes
@@ -85,8 +85,8 @@ router.post("/bro", authorize, (req, res) => {
 })
 
 //sql routes
-router.get("/urge", authorize, (req, res) => {
-    getUrgeCategoryController(req, res);
+router.post("/urge", authorize, (req, res) => {
+    queryHuggingFaceAPI(req, res);
 });
 
 // Big brain routes

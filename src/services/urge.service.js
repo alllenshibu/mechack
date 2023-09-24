@@ -20,28 +20,37 @@ const userInput = {
     }
   }; 
 
-async function queryHuggingFaceAPI(userInput) {
+async function queryHuggingFaceAPI(data) {
     const response = await fetch(
       'https://api-inference.huggingface.co/models/sileod/deberta-v3-base-tasksource-nli',
       {
         headers: { Authorization: `Bearer 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`},
         method: 'POST',
-        body: JSON.stringify(userInput),
+       body: JSON.stringify({
+        inputs: 'smartphone',
+        parameters: {
+          candidate_labels: ['savings', 'needs', 'wants']
+        }
+      }),
+       // 'Content-Type': 'application/json',
       }
     );
     const result = await response.json();
     return result;
   } 
-
-  queryHuggingFaceAPI(userInput)
+module.exports = {
+    //  getAllUrgesService,
+      queryHuggingFaceAPI
+}
+ queryHuggingFaceAPI(userInput)
   .then((response) => {
     console.log(JSON.stringify(response));
   })
   .catch((error) => {
     console.error('Error:', error);
   }); 
-  /*
-  queryHuggingFaceAPI({userInput
+
+  /*queryHuggingFaceAPI({userInput
         }).then((response) => {
         console.log(JSON.stringify(response));
     });   */
@@ -69,10 +78,6 @@ async function queryHuggingFaceAPI(userInput) {
     }
 } */
 
-module.exports = {
-  //  getAllUrgesService,
-    queryHuggingFaceAPI
-}
 /*how to 
 
 /*Use this model with the Inference API
